@@ -70,6 +70,14 @@ layout: default
         <!-- disqus 评论框 end -->
         {% endif %}
 
+        {% if site.valine_id %}
+        <!-- valine 评论框 start -->
+        <div class="comment">
+          <div id="vcomments" class="vcomments"></div>
+        </div>
+        <!-- valine 评论框 end -->
+        {% endif %}
+
       </div>
 
       <!-- Sidebar Container -->
@@ -126,6 +134,21 @@ layout: default
   })();
 </script>
 <!-- disqus 公共JS代码 end -->
+{% endif %}
+
+{% if site.valine_id %}
+<!-- valine 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  new Valine({
+    el: "#vcomments",
+    appId: "{{site.valine_id}}",
+    appKey: "{{site.valine_key}}",
+    verify: false, // 验证码
+    notify: false, // 评论回复提醒
+    placeholder: ''
+  })
+</script>
+<!-- valine 公共JS代码 end -->
 {% endif %}
 
 {% if site.anchorjs %}

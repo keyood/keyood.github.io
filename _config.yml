@@ -46,6 +46,9 @@ kramdown:
 
 # Disqus settings
 # disqus_username: https-keyood-github-io
+# Valine settings
+valine_id: GB9Xl8qBzL186vCaqyifffAj-9Nh9j0Va
+valine_key: vrFJGVqGRlAaSY3zM9OFI8RH
 
 # Analytics settings
 # Baidu Analytics

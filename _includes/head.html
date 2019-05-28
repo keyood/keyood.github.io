@@ -39,5 +39,15 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   <!-- ga & ba script hoook -->
+
+  <!-- jQuery -->
+  <script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
+  <!-- jQuery -->
+  {% if site.valine_id %}
+  <!-- valine cdn start -->
+  <script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  <!-- valine cdn start -->
+  {% endif %}
   <script></script>
 </head>
