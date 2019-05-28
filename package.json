@@ -2,7 +2,7 @@
   "name": "keyood.github.io",
   "title": "keyood's Blog",
   "version": "1.0.0",
-  "homepage": "http://keyood.github.io",
+  "homepage": "https://keyood.github.io",
   "author": "keyood",
   "devDependencies": {
     "grunt": "~0.4.5",

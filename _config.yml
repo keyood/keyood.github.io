@@ -3,9 +3,9 @@ title: Keyood's Blog
 SEOTitle: Keyood的博客 | Keyood's Blog
 header-img: img/home-bg.jpg
 email: iwfshao@163.com
-description: ""
-keyword: ""
-url: "http://keyood.github.io"              # your host, for absolute URL
+description: "前端开发相关知识"
+keyword: "前端,javascript,react,node,webpack"
+url: "https://keyood.github.io"              # your host, for absolute URL
 baseurl: ""         # for example, '/blog' if your blog hosted on 'host/blog'
 
 
@@ -39,11 +39,13 @@ plugins: [jekyll-paginate]
 # Markdown settings
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
+# document: https://jekyllrb.com/docs/configuration/#kramdown
 markdown: kramdown
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
+# Disqus settings
+# disqus_username: https-keyood-github-io
 
 # Analytics settings
 # Baidu Analytics
@@ -71,7 +73,7 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 friends: [
     # {
     #     title: "Hux Blog",
-    #     href: "http://huangxuan.me"
+    #     href: "https://huangxuan.me"
     # },{
     #     title: "Foo",
     #     href: "#"

@@ -109,7 +109,7 @@ layout: default
     </div>
   </div>
 </article>
-
+<!-- Post Content -->
 
 {% if site.disqus_username %}
 <!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
@@ -121,13 +121,12 @@ layout: default
 
   (function () {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
 <!-- disqus 公共JS代码 end -->
 {% endif %}
-
 
 {% if site.anchorjs %}
 <!-- async load function -->
@@ -141,9 +140,9 @@ layout: default
     s.parentNode.insertBefore(o, s);
   }
 </script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<!-- anchor-js, Doc:https://bryanbraun.github.io/anchorjs/ -->
 <script>
-  async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js", function () {
+  async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js", function () {
     anchors.options = {
       visible: 'always',
       placement: 'right',
@@ -163,4 +162,7 @@ layout: default
     }
   }
 </style>
+{% endif %}
+{% if site.disqus_username %}
+<script id="dsq-count-scr" src="//https-keyood-github-io.disqus.com/count.js" async></script>
 {% endif %}
