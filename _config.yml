@@ -19,7 +19,6 @@ github_username:    keyood
 # facebook_username:  keyood
 
 
-
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 highlighter: rouge
@@ -29,11 +28,9 @@ exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
 
-
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
 plugins: [jekyll-paginate]
-
 
 
 # Markdown settings
@@ -44,11 +41,13 @@ markdown: kramdown
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
+
 # Disqus settings
 # disqus_username: https-keyood-github-io
 # Valine settings
 valine_id: GB9Xl8qBzL186vCaqyifffAj-9Nh9j0Va
 valine_key: vrFJGVqGRlAaSY3zM9OFI8RH
+
 
 # Analytics settings
 # Baidu Analytics
@@ -58,26 +57,24 @@ ba_track_id: bb7acbefa6e5884a4fc9b576fade4550
 # ga_domain: huangxuan.me
 
 
-
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "留下点什么"
 sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
-
 # Featured Tags
 featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
-
+featured-condition-size: 0            # A tag will be featured if the size of it is more than this condition value
 
 
 # Friends
 friends: [
-    # {
-    #     title: "Hux Blog",
-    #     href: "https://huangxuan.me"
-    # },{
+    {
+      title: "星空守候",
+      href: "https://onlystar.gitlab.io/"
+    }
+    # ,{
     #     title: "Foo",
     #     href: "#"
     # },{
@@ -90,4 +87,4 @@ friends: [
     #     title: "It helps SEO",
     #     href: "#"
     # }
-]
+  ]

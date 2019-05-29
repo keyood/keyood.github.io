@@ -109,9 +109,18 @@ layout: default
         <h5>FRIENDS</h5>
         <ul class="list-inline">
           {% for friend in site.friends %}
-          <li><a href="{{friend.href}}">{{friend.title}}</a></li>
+          <li><a href="{{friend.href}}" target="_blank">{{friend.title}}</a></li>
           {% endfor %}
         </ul>
+        {% endif %}
+
+        {% if site.valine_id %}
+        <hr class="hidden-sm hidden-xs">
+        <!-- id 将作为查询条件 -->
+        <span id="{{page.url}}" class="leancloud-visitors" data-flag-title="Your Article Title">
+          <em class="post-meta-item-text">阅读量 </em>
+          <i class="leancloud-visitors-count">0</i>
+        </span>
         {% endif %}
       </div>
     </div>
@@ -145,7 +154,10 @@ layout: default
     appKey: "{{site.valine_key}}",
     verify: false, // 验证码
     notify: false, // 评论回复提醒
-    placeholder: ''
+    avatar: 'wavatar',
+    placeholder: '喵了个咪～',
+    lang: 'zh-cn',
+    visitor: true
   })
 </script>
 <!-- valine 公共JS代码 end -->
