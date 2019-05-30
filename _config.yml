@@ -88,3 +88,6 @@ friends: [
     #     href: "#"
     # }
   ]
+
+# 鼓励
+encourage: false
