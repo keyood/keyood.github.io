@@ -1,0 +1,207 @@
+---
+layout:     post
+title:      "nuxt 高级"
+subtitle:   "主要介绍一些配置项"
+date:       2018-09-07
+author:     "keyood"
+header-img: "img/post-bg-js-module.jpg"
+tags:
+    - nuxt
+---
+
+## 1. 获取数据
+- 通常在`vue`项目中获取数据的方法都是在`created`或者`mounted`请求数据
+
+*在`Nuxt.js`中beforeCreated和created生命周期在服务端和客户端都会去执行，其它的生命周期只会在客户端执行*
+
+> 获取数据通常在服务端进行，使用`asyncData`方法，可以在该页面中引入`axios`，个人喜欢在新建`plugins/$axios`，二次封装`axios`,将它添加到上下文对象`content`中
+
+```js
+import Vue from 'vue'
+import axios from 'axios'
+
+Vue.prototype.$axios = axios
+
+export default ({app}) => {
+  app.$axios = axios
+}
+```
+
+然后`nuxt.config.js`配置
+
+```js
+module.exports = {
+  plugins: ['~/plugins/$axios'],
+}
+```
+
+然后在页面中
+
+```js
+asyncData ({app}) {
+  app.$axios.get('https://www.baidu.com').then (res => {
+      //
+    })
+  }
+```
+
+## 2. 扩展或修改配置
+- ### 添加配置postcss
+在根目录下新建`.postcssrc.js`,添加`postcss-pxtorem`插件
+
+```
+npm install postcss-pxtorem --save-dev
+```
+
+```js
+module.exports = {
+  "plugins": {
+    "postcss-pxtorem": {
+      rootValue: 32,
+      propList: ['*'],
+      selectorBlackList: ['html'],
+      minPixelValue: 1
+    }
+  }
+}
+```
+
+- ### 添加配置babel
+在根目录下新建`.babelrc`
+
+```
+npm install babel-plugin-transform-runtime babel-preset-env --save-dev
+```
+
+```json
+{
+  "presets": [
+    ["env", {
+      "modules": false,
+      "targets": {
+        "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+      }
+    }]
+  ],
+  "plugins": ["transform-runtime"
+  ]
+}
+```
+
+- ### 使用预处理器
+例如需要使用`less`
+
+```
+npm install less less-loader --save-dev
+```
+
+然后在组件中直接使用
+
+```css
+<style lang="less">
+.box {
+  color: red;
+}
+</style>
+```
+
+- ### 扩展webpack配置
+在`nuxt.config.js`中使用`extend`选项扩展webpack配置
+
+```js
+module.exports = {
+  build: {
+    extend (config, { isDev, isClient }) {
+      // ...
+    }
+  }
+}
+```
+
+- ### 修改HOST和PORT
+有两种不同的配置HOST和PORT
+
+#### 使用env变量
+
+```json
+"scripts": {
+  "dev": "HOST=0.0.0.0 PORT=3333 nuxt"
+}
+```
+
+为了跨平台支持，使用`cross-env`
+
+安装：
+
+```
+npm install cross-env --save-dev
+```
+
+```json
+"scripts": {
+ "dev": "cross-env HOST=0.0.0.0 PORT=3333 nuxt"
+}
+```
+
+#### 在`package.json`:
+
+```json
+"config": {
+  "nuxt": {
+    "host": "0.0.0.0",
+    "port": "3333"
+  }
+},
+"scripts": {
+  "dev": "nuxt"
+}
+```
+### 3. 注意事项
+
+- `document`或者`window`未定义
+> 在引入第三方库或者插件时候，或者直接在代码中写`window`时
+
+解决方案，判断是不是客户端，客户端才引入或者执行该方法
+
+```js
+if (process.client) {
+  require('****')
+}
+```
+
+- 修改环境变量
+
+在项目中为了方便测试需要在移动端添加`vconsole`,而在生产环境是没有的，为了区分需要加入环境变量
+
+```json
+"scripts": {
+  "build": "cross-env nuxt build",
+  "buildDev": "cross-env NODE_ENV=release nuxt build"
+}
+```
+
+当执行 `npm run buildDev`，然而拿到的`process.env.NODE_ENV`还是`production`，这个是在`nuxt build`的时候配置好的，无法更改，所以需要更换`_ENV`，如下：
+
+```json
+"scripts": {
+  "build": "cross-env nuxt build",
+  "buildDev": "cross-env _ENV=release nuxt build"
+}
+```
+
+然后在`layout/default.vue`中
+
+```js
+created () {
+  if (process.env._ENV === 'release' && process.client) {
+    let vScript = document.createElement('script')
+    let tScript = document.createElement('script')
+    vScript.setAttribute('src', 'https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js')
+    tScript.innerHTML = 'var vConsole = new VConsole()'
+    document.body.appendChild(vScript)
+    setTimeout(() => {
+      document.body.appendChild(tScript)
+    }, 1000)
+  }
+}
+```
