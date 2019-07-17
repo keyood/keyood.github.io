@@ -1,0 +1,96 @@
+---
+layout:     post
+title:      "算法题"
+subtitle:   "基础练习"
+date:       2019-07-17
+author:     "keyood"
+header-img: "img/post-bg-laptop.jpg"
+tags:
+    - js
+---
+
+## 1. 整数反转
+给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−2^31,  2^31 − 1]。
+
+解法：判断正负，将绝对值转字符串，再翻转字符串，判断是否超出范围，返回整数
+```js
+var reverse = function(x) {
+  let max = Math.pow(2, 31) - 1
+  let isPositive = x > 0
+  let str = Math.abs(x) + ''
+  let reverseStr = +str.split('').reverse().join('')
+  if ( isPositive ) {
+    return reverseStr > max ? 0 : reverseStr
+  } else {
+    return reverseStr > max + 1 ? 0 : -reverseStr
+  }
+  return 0
+};
+```
+
+## 2. 回文数
+判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数
+
+解法一：将整数转化成字符串，再将字符串翻转，对比前后字符串
+
+```js
+var isPalindrome = function(x) {
+    let str = x + ''
+    let reverseStr = str.split('').reverse().join('')
+    return str === reverseStr
+};
+```
+解法二：将整数转化成字符串，截取后半段翻转与前半段相比
+
+```js
+var isPalindrome = function(x) {
+    let str = x + ''
+    let len = str.length
+    let cutLen = Math.ceil(len / 2) // 一半的长度
+    let leftStr = ''
+    if (len % 2 > 0) {
+        leftStr = str.slice(0, cutLen - 1)
+    } else {
+        leftStr = str.slice(0, cutLen)
+    }
+    let rightStr = str.slice(cutLen).split('').reverse().join('')
+    return leftStr === rightStr
+};
+```
+
+解法三：将整数转化成字符串，遍历字符串，对比正序和倒序相对应的项
+
+```js
+var isPalindrome = function(x) {
+    let str = x + ''
+    let len = str.length -1
+    let cutLen = Math.ceil(len / 2) // 一半的长度
+    for (let i = 0; i < cutLen; i ++) {
+        if (str[i] !== str[len-i]) {
+            return false
+        }
+    }
+    return true
+};
+```
+
+性能表现 解法三 > 解法一 ～= 解法二
+
+## 3. 到达终点数字
+在一根无限长的数轴上，你站在0的位置。终点在target的位置。
+每次你可以选择向左或向右移动。第 n 次移动（从 1 开始），可以走 n 步。返回到达终点需要的最小移动次数。
+
+> 解法: 假设a为正向移动步数，b为负向移动步数，有a-b==/target/，sum==a+b； 则有sum-/target/ == 2b;
+
+```js
+var reachNumber = function(target) {
+    let sum = 0
+    let i = 1
+    let tmp = Math.abs(target)
+    while (sum < tmp || (sum - tmp) % 2) {
+        sum += i
+        ++i
+    }
+    return i - 1;
+};
+```
