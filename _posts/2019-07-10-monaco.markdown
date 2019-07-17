@@ -1,0 +1,235 @@
+---
+layout:     post
+title:      "Monaco Editor"
+subtitle:   "'地表'最强网页编辑器？"
+date:       2019-07-10
+author:     "keyood"
+header-img: "img/post-bg-react.png"
+tags:
+    - react
+---
+## 介绍
+
+> Monaco Editor是为VS Code提供支持的代码编辑器。支持IE 11，Edge，Chrome，Firefox，Safari和Opera。 移动浏览器或移动Web框架不支持Monaco编辑器。
+[官方地址](https://microsoft.github.io/monaco-editor/index.html)
+
+下文介绍如何在 react 项目中引用，以及一些基础的使用方式
+
+## 安装react-monaco-editor
+
+```bash
+npm i react-monaco-editor
+```
+
+## 添加webpack插件支持
+
+```bash
+npm i -D monaco-editor-webpack-plugin 
+```
+
+修改webpack配置文件，如`webpack.config.js`:
+
+```js
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+module.exports = {
+  plugins: [
+    new MonacoWebpackPlugin({
+      // 语言选项
+      languages: ['json']
+    })
+  ]
+};
+```
+
+如果项目中使用了css module, 需要给monaco配置css-loader
+
+```js
+// Specify separate paths
+const path = require('path');
+const APP_DIR = path.resolve(__dirname, './src');
+const MONACO_DIR = path.resolve(__dirname, './node_modules/monaco-editor');
+
+{
+  test: /\.css$/,
+  include: APP_DIR,
+  use: [{
+    loader: 'style-loader',
+  }, {
+    loader: 'css-loader',
+    options: {
+      modules: true,
+      namedExport: true,
+    },
+  }],
+}, {
+  test: /\.css$/,
+  include: MONACO_DIR,
+  use: ['style-loader', 'css-loader'],
+}
+```
+
+## 属性
+
+| 名字           | 描述                | 类型   | 默认   |
+| -------------- | ------------------- | ------ | ------ |
+| `width`        | 宽度                | string | `100%` |
+| `height`       | 高度                | string | `100%` |
+| `value`        | 值                  | string |        |
+| `defaultValue` | 默认值              | string |        |
+| `language`     | 语言                | string |        |
+| `theme`        | 样式 `vs` `vs-dark` | string |        |
+| `options`      | 选项                | Object |        |
+
+## 事件
+
+| 名字                             | 触发时间   |
+| -------------------------------- | ---------- |
+| `onChange(newValue, event)`      | 内容改变时 |
+| `editorWillMount(monaco)`        | mounted前  |
+| `editorDidMount(editor, monaco)` | mounted    |
+| `context`                        | 上下文     |
+
+### 使用多种主题
+
+[Monaco 只支持一种主题](https://github.com/Microsoft/monaco-editor/issues/338).
+
+### 智能提示
+
+这里以添加MySQL关键字智能提示为例子
+
+1. 修改 `MonacoWebpackPlugin` 中的languages选项，添加`mysql`
+2. 新建 `mysqlIntelliSense.js`
+
+```javascript
+// 关键字列表
+const keywords = [
+  'ACCESSIBLE', 'ACCOUNT', 'ACTION', 'ADD', 'AFTER'...
+]
+
+// 操作列表
+const operators = [
+  'AND', 'BETWEEN', 'IN', 'LIKE'...
+]
+
+// 函数列表
+const builtinFunctions = [
+  'ABS', 'ACOS', 'ADDDATE', 'ADDTIME'...
+]
+
+// 提示对象构造函数
+const provideItem = (monaco, obj, kind) => {
+  return obj.map(item => {
+    return {
+      label: item,
+      insertText: item,
+      kind: monaco.languages.CompletionItemKind[kind],
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+    }
+  })
+}
+
+// 提示对象整合
+export function provideCompletion (monaco) {
+  let keyword = provideItem(monaco, keywords, 'Keyword')
+  let operator = provideItem(monaco, operators, 'Operator')
+  let builtinFunction = provideItem(monaco, builtinFunctions, 'Function')
+  return [...keyword, ...operator, ...builtinFunction]
+}
+```
+
+3. 目标文件, 在组件mount前，注册好提示信息
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import MonacoEditor from 'react-monaco-editor';
+import { provideCompletion } from './mysqlIntelliSense';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      code: '// type your code...',
+    }
+  }
+
+  /**
+   * editorWillMount
+   * @param {Onject} monaco
+   */
+  editorWillMount = monaco => {
+    monaco.languages.registerCompletionItemProvider('mysql', {
+      provideCompletionItems: function(model, position, context, token) {
+        var line = model.getValueInRange({
+          startLineNumber: position.lineNumber,
+          startColumn: 1,
+          endLineNumber: position.lineNumber,
+          endColumn: position.column
+        })
+        let reg = RegExp(/^[a-zA-Z]+$/)
+        return {
+          suggestions: reg.test(line) ? provideCompletion(monaco) : []
+        }
+      }
+    })
+    return {}
+  }
+
+  editorDidMount(editor, monaco) {
+    console.log('editorDidMount', editor);
+  }
+  onChange(newValue, e) {
+    console.log('onChange', newValue, e);
+  }
+  render() {
+    const code = this.state.code;
+    const options = {
+      selectOnLineNumbers: true
+    };
+    return (
+      <MonacoEditor
+        width="800"
+        height="600"
+        language="mysql" // 这里填写mysql
+        theme="vs-dark"
+        value={code}
+        options={options}
+        onChange={this.onChange}
+        editorDidMount={this.editorDidMount}
+        editorWillMount={this.editorWillMount}
+      />
+    );
+  }
+}
+
+render(
+  <App />,
+  document.getElementById('root')
+);
+```
+### 使用对比
+
+```js
+import React from 'react';
+import { MonacoDiffEditor } from 'react-monaco-editor';
+
+class App extends React.Component {
+  render() {
+    const code1 = "// your original code...";
+    const code2 = "// a different version...";
+    const options = {
+      //renderSideBySide: false
+    };
+    return (
+      <MonacoDiffEditor
+        width="800"
+        height="600"
+        language="javascript"
+        original={code1}
+        value={code2}
+        options={options}
+      />
+    );
+  }
+}
+```
