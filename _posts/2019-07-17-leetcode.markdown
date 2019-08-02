@@ -77,6 +77,7 @@ var isPalindrome = function(x) {
 性能表现 解法三 > 解法一 ～= 解法二
 
 ## 3. 到达终点数字
+
 在一根无限长的数轴上，你站在0的位置。终点在target的位置。
 每次你可以选择向左或向右移动。第 n 次移动（从 1 开始），可以走 n 步。返回到达终点需要的最小移动次数。
 
@@ -93,4 +94,104 @@ var reachNumber = function(target) {
     }
     return i - 1;
 };
+```
+
+## 4.数组去重
+
+给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+
+解法一：双层循环
+
+```js
+var removeDuplicates = function(nums) {
+    for(let i = 0; i < nums.length;i++) {
+        for(let j = i + 1; j < nums.length;) {
+            if (nums[i] == nums[j]) {
+                nums.splice(j, 1)
+            } else {
+                j++
+            }
+        }
+    }
+    return nums.length
+}
+```
+
+解法二：单层循环
+
+已知输入是排序后的数组，所以只要考虑前后是否相等
+
+```js
+var removeDuplicates = function(nums) {
+    for(let i = 0; i < nums.length;) {
+      if (nums[i] == nums[i+1]) {
+            nums.splice(i+1, 1)
+        } else {
+            i++
+        }
+    }
+    return nums.length
+}
+```
+
+解法三：ES6 `Set`
+
+```js
+var removeDuplicates = function(nums) {
+    nums = [...new Set(nums)]
+    return nums.length
+}
+```
+
+## 5.寻找数组的中心索引
+
+数组中心索引的左侧所有元素相加的和等于右侧所有元素相加的和。如果数组不存在中心索引，那么我们应该返回 -1。如果数组有多个中心索引，那么我们应该返回最靠近左边的那一个。
+
+解法：左右两边加中心索引的值为总和
+
+```js
+left + num[i] + right = sum
+left = right
+2 * left + num[i] = sum
+```
+
+```js
+var pivotIndex = function(nums) {
+    if (!nums.length) return -1
+    let left = 0
+    let sum = nums.reduce((a, b) => a + b)
+    for (let i = 0; i < nums.length; i++) {
+        if (left * 2 + nums[i]  === sum ) {
+            return i
+        }
+        left += nums[i]
+    }
+    return -1
+}
+```
+
+## 6.至少是其他数字两倍的最大数
+
+在一个给定的数组nums中，总是存在一个最大元素 。
+查找数组中的最大元素是否至少是数组中每个其他数字的两倍。
+如果是，则返回最大元素的索引，否则返回-1
+
+```js
+var dominantIndex = function(nums) {
+    if (nums.length === 1) return 0
+    let maxIndex = 0
+    for (let i = 1, len = nums.length; i < len; i++) {
+      if (nums[i] > nums[maxIndex]) {
+        maxIndex = i
+      }
+    }
+    let max = nums.splice(maxIndex, 1)[0]
+    let flag = false
+    for (let i = 0, len = nums.length; i < len; i++) {
+        if (max < nums[i] * 2) {
+            flag = true
+        }
+    }
+    return flag ? -1 : maxIndex
+}
 ```
