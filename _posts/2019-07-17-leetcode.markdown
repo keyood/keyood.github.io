@@ -195,3 +195,116 @@ var dominantIndex = function(nums) {
     return flag ? -1 : maxIndex
 }
 ```
+
+## 7.加一
+
+给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
+
+`输入: [1,2,3] 输出: [1,2,4]`
+
+```js
+var plusOne = function(digits) {
+    for (let i = digits.length - 1; i >= 0; i--) {
+        if (digits[i] === 9) {
+            digits[i] = 0
+            if (i == 0) {
+                digits.splice(0, 0, 1)
+                return digits
+            }
+        } else {
+            digits[i] = digits[i] + 1
+            return digits
+        }
+    }
+}
+```
+
+## 8.反转字符串
+
+编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。不要给另外的数组分配额外的空间，你必须原地修改输入数组。
+
+解法一：
+
+```js
+var reverseString = function(s) {
+    return s.reverse()
+}
+```
+
+解法二：
+
+```js
+var reverseString = function(s) {
+    let len = s.length
+    for (let i = 0; i < Math.floor(len / 2); i++ ) {
+        let temp = s[i]
+        s[i] = s[len - i - 1]
+        s[len - i - 1] = temp
+    }
+    return s
+}
+```
+
+## 9.翻转字符串里的单词
+
+给定一个字符串，逐个翻转字符串中的每个单词,输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括
+
+```js
+var reverseWords = function(s) {
+    let arr = s.split(' ')
+    let reverseArr = arr.reverse().filter(item => item)
+    return reverseArr.join(' ')
+}
+```
+
+## 10.求众数
+
+给定一个大小为 n 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+
+你可以假设数组是非空的，并且给定的数组总是存在众数
+
+解法：先计算到每个值出现的次数，再找出最大次数的那个值
+
+```js
+var majorityElement = function(nums) {
+    let map = {}
+    for (let i = 0; i < nums.length; i++) {
+        if (map[nums[i]]) {
+            map[nums[i]] = (map[nums[i]]) + 1
+        } else {
+            map[nums[i]] = 1
+        }
+    }
+    let maxCount = 0
+    let maxValue
+    for (prop in map) {
+        if (map[prop] > maxCount) {
+            maxCount = map[prop]
+            maxValue = prop
+        }
+    }
+    return maxValue
+}
+```
+
+## 11.无重复字符的最长子串
+
+给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度
+
+```js
+var lengthOfLongestSubstring = function(s) {
+    let tempArr = []
+    let maxArr = []
+    for (let i = 0; i < s.length; i++) {
+        let index = tempArr.indexOf(s[i])
+        if (index > -1) {
+            if (tempArr.length > maxArr.length) {
+                maxArr = tempArr
+            }
+            tempArr = tempArr.slice(index + 1)
+        }
+        tempArr.push(s[i])
+    }
+    return Math.max(maxArr.length, tempArr.length)
+}
+```
