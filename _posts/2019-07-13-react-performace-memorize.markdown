@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      "列表 & key"
-subtitle:   "react性能优化之memorize "
-date:       2019-05-23
+title:      "react性能优化之memorize"
+subtitle:   ""
+date:       2019-07-13
 author:     "keyood"
 header-img: "img/post-bg-react.png"
 tags:
