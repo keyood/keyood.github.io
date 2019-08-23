@@ -320,13 +320,10 @@ var maxArea = function(height) {
     let max = 0
     let len = height.length
     for (let i = 0; i < len -1 ; i++) {
-        for (let j = i+1; j < len; j++) {
-            let area = Math.min(height[i], height[j]) * (j - i)
-            // console.log(i, j,area)
-            if (area > max) {
-                max = area
-            }
-        }
+      for (let j = i+1; j < len; j++) {
+        let area = Math.min(height[i], height[j]) * (j - i)
+        max = Math.max(max, area)
+      }
     }
     return max
 }
@@ -350,4 +347,42 @@ var maxArea = function(height) {
 
     return max
 }
+```
+
+## 13.救生艇
+
+第 i 个人的体重为 people[i]，每艘船可以承载的最大重量为 limit。  
+每艘船最多可同时载两人，但条件是这些人的重量之和最多为 limit。  
+返回载到每一个人所需的最小船数。(保证每个人都能被船载)。
+
+解法：双指针，先给数组排序，每次都让最重的上船
+
+```js
+var numRescueBoats = function(people, limit) {
+    let left = 0
+    let right = people.length - 1
+    let total = 0
+    people.sort((a, b) => a - b)
+    while (left <= right) {
+      if (people[left] + people[right] <= limit) {
+        left++
+      }
+      total++
+      right--
+    }
+    return total
+};
+```
+
+## 14.移除元素
+
+给定一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素，返回移除后数组的新长度。
+
+```js
+var removeElement = function(nums, val) {
+    for (let i = 0; i < nums.length;) {
+       nums[i] === val ? nums.splice(i, 1) : i++
+    }
+    return nums.length
+};
 ```
