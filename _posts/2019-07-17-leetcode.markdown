@@ -223,7 +223,7 @@ var plusOne = function(digits) {
 
 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。不要给另外的数组分配额外的空间，你必须原地修改输入数组。
 
-解法一：
+原生
 
 ```js
 var reverseString = function(s) {
@@ -231,7 +231,7 @@ var reverseString = function(s) {
 }
 ```
 
-解法二：
+解法一：遍历
 
 ```js
 var reverseString = function(s) {
@@ -243,6 +243,22 @@ var reverseString = function(s) {
     }
     return s
 }
+```
+
+解法二：递归
+
+```js
+var reverseString = function(s) {
+    var reverse = function (s, i) {
+        let len = s.length
+        if (i >= Math.floor(len / 2)) return s
+        let temp = s[i]
+        s[i] = s[len - i - 1]
+        s[len - i - 1] = temp
+        return reverse(s, ++i)
+    }
+    return reverse(s, 0)
+};
 ```
 
 ## 9.翻转字符串里的单词
@@ -385,4 +401,63 @@ var removeElement = function(nums, val) {
     }
     return nums.length
 };
+```
+
+### 15.相同的树
+
+给定两个二叉树，编写一个函数来检验它们是否相同,如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同。
+
+思路：先判断节点的值，再判断节点的左右节点
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {boolean}
+ */
+var isSameTree = function(p, q) {
+    if ( p == null && q == null){
+        return true;
+    }
+
+    if (p !== null && q !== null && p.val === q.val){
+        return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
+    } else {
+        return false;
+    }
+};
+```
+
+### 16.Pow(x, n)
+
+实现幂函数，n 范围[-2^31, 2^31-1]
+
+解法一：先判断n的正负, 再使用递归
+
+```js
+/**
+ * @param {number} x
+ * @param {number} n
+ * @return {number}
+ */
+var myPow = function(x, n) {
+    var pow = function(p, n) {
+        if (n === 1) return p
+        return pow(p * x, --n)
+    }
+    if (n === 0) {
+        return 0
+    } else if ( n > 0) {
+        return pow(x, n)
+    } else {
+        return 1 / pow(x, Math.abs(n))
+    }
+}
 ```
